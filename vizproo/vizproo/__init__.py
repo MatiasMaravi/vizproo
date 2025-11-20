@@ -3,9 +3,13 @@
 
 # Copyright (c) MATIUS.
 # Distributed under the terms of the Modified BSD License.
-
+import sys
 from .example import ExampleWidget
 from ._version import __version__, version_info
+
+if "google.colab.output" in sys.modules:
+    sys.modules["google.colab.output"].enable_custom_widget_manager()
+
 
 def _jupyter_labextension_paths():
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
