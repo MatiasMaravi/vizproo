@@ -5,4 +5,4 @@
 # Distributed under the terms of the Modified BSD License.
 
 version_info = (0, 1, 6, 'dev0')
-__version__ = '0.1.5.dev0'
+__version__ = '0.1.6.dev0'
