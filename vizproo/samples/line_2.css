@@ -1,0 +1,10 @@
+.leo-svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.leo-path {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 1.5;
+}
