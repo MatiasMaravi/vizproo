@@ -1,53 +1,60 @@
-# Instalación de VizProo
-VizProo es una herramienta poderosa para la visualización de datos. A continuación, se detallan los pasos necesarios para instalar VizProo en su sistema.
+# Instalación de VizProo 🚀
+VizProo es una herramienta para la visualización de datos en Python. Aquí se muestran las dos formas recomendadas de instalación. Elija la que mejor se adapte a su caso.
 
-## Pip install
-La forma más sencilla de instalar VizProo es utilizando pip, el gestor de paquetes de Python. Abra su terminal y ejecute el siguiente comando:
-
+## 📦 Instalación vía pip
+La forma más sencilla es usando pip (asegúrese de tener Python 3.11+):
 ```bash
 pip install vizproo
 ```
-Esto descargará e instalará la última versión de VizProo desde el repositorio oficial de PyPI. Además como sus dependencias (pandas, anywidget).
+Esto instalará la última versión estable junto con sus dependencias (pandas, anywidget). ✅
 
-## Instalación desde el código fuente
-Si prefiere instalar VizProo desde el código fuente, primero verifica que cuentas con los siguientes requisitos previos:
-- Python 3.11 o superior
+## 🛠 Instalación desde el código fuente
+Ideal si desea contribuir, depurar o modificar el paquete.
 
-(Opcionalmente para desarrollo o modificacion de la libreria)
-- Node.js v20.x.x 
+### 🔍 Requisitos previos
+- Python 3.11 o superior 🐍
+
+Opcional para tareas de desarrollo frontend:
+- Node.js v20.x.x
 - npm 9.x.x o superior
 - yarn 1.22.x o superior
 
- siga estos pasos:
-1. Clone el repositorio de VizProo desde GitHub:
+### 🚧 Pasos
+1. Clonar el repositorio:
    ```bash
    git clone https://github.com/MatiasMaravi/vizproo.git
-    ```
-2. Crea un entorno virtual (muy recomendado):
-2.1 Windows:
+   ```
+2. Entrar al directorio:
+   ```bash
+   cd vizproo
+   ```
+3. Crear y activar entorno virtual (recomendado) ⚠️  
+   Windows:
    ```bash
    python -m venv venv
-   .\venv\Scripts\activate  # En Windows use 
+   .\venv\Scripts\activate
    ```
-2.2 macOS/Linux:
+   macOS / Linux:
    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
+   python3 -m venv venv
+   source venv/bin/activate
    ```
-3. Instale las dependencias necesarias:
+4. Instalar dependencias de Python (y las de frontend si aplica):
    ```bash
-    pip install -r requirements.txt
-    jlpm install
+   pip install -r requirements.txt
+   jlpm install
    ```
-4. Navegue al directorio del proyecto:
+5. Instalación en modo editable + build:
    ```bash
-    cd vizproo
+   pip install -e .
+   npm run build
    ```
-5. Instale VizProo en modo desarrollo:
-   ```bash
-    pip install -e .
-    npm run build
-   ```
-Esto instalará VizProo y sus dependencias en su entorno virtual. Ahora puede comenzar a usar VizProo en sus proyectos de Python.
-Revise la página de [Uso Básico](./uso_basico.md) para aprender cómo empezar a utilizar VizProo.
-Si quisiera modificar la librería, revisa la sección de [Desarrollo](./desarrollo.md).
+   (Si no modificará la parte frontend, puede omitir npm run build.)
+
+✅ Listo: VizProo queda disponible en su entorno y podrá importarlo en sus scripts o notebooks.
+
+## 📚 Próximos pasos
+Revise la página de [Uso Básico](./uso_basico.md) para comenzar.  
+Si desea contribuir o extender la librería, consulte la sección de [Desarrollo](./desarrollo.md). 🧪
+
+✨ Sugerencia: Mantenga su entorno aislado para evitar conflictos de versiones.

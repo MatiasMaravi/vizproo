@@ -1,60 +1,93 @@
-# Desarrollo
-Si estás interesado en contribuir al desarrollo de VizProo, esta sección te proporcionará la información necesaria para comenzar.
+# Desarrollo 🛠
+Si quieres contribuir a VizProo, aquí tienes una guía concisa para comprender la arquitectura y crear nuevos gráficos.
 
-## Requisitos Previos
-Antes de comenzar, asegúrate de tener instalados los siguientes requisitos previos en tu sistema:
-- Python 3.11 o superior
-- Node.js v20.x.x
-- npm 9.x.x o superior
-- yarn 1.22.x o superior
+## Requisitos Previos 📋
+Obligatorio:
+- Python 3.11+ 🐍
+- Node.js v20.x.x ▶️
+- npm 9.x.x+
+- yarn 1.22.x+
 
-## Arquitectura del Proyecto
-VizProo está estructurado en varios módulos principales que facilitan su desarrollo y mantenimiento. A continuación, se describen brevemente los componentes clave del proyecto.
-VizProo se divide en dos partes principales o también llamados paquetes: el frontend (implementado en Python) y el backend (implementado en TypeScript con D3.js). El primero se llama "vizproo" y el segundo "vizproo-js".
-Backend(Carpeta src):
-Toda la lógica de los gráficos y widgets está implementada en TypeScript utilizando D3.js para la visualización de datos.
-- **src/base/**: Contiene el código fuente base para la creación de nuevos gráficos y widgets.
-- **src/const/**: Contiene constantes utilizadas en el proyecto.
-- **src/graphs/**: Contiene la implementación de los gráficos específicos de VizProo.
-- **src/widgets/**: Contiene la implementación de los widgets personalizados de VizProo.
-- **src/layouts/**: Contiene la implementación de los Dashboards.
-- **src/extension.ts**: Archivo principal de conexión entre el frontend(ipywidgets) y el backend(d3.js).
-- **src/index.ts**: Punto donde se exporta todo el código fuente de TypeScript.
-- **src/plugin.ts**: Código que activa la extensión del widget.
-- **src/version.ts**: Código con información sobre la versión del paquete backend.
-- **css/**: Contiene los estilos CSS utilizados en los gráficos y widgets de VizProo.
-Frontend(Carpeta vizproo):
-Contiene la implementación de los gráficos y widgets para poder ser mostrados en los notebooks mediante ipywidgets.
-- **vizproo/graphs_/**: Contiene la implementación de los gráficos específicos de VizProo en Python.
-- **vizproo/__init__.py**: Archivo de inicialización del paquete VizProo en Python.
-- **vizproo/_frontend.py**: Código con información sobre el paquete frontend de los widgets.
-- **vizproo/_version.py**: Código con información sobre la versión del paquete frontend.
-- **vizproo/base_widget.py**: Contiene la clase base para la creación de nuevos gráficos y widgets en Python.
-- **vizproo/graphs.py**: Contiene los imports de los gráficos en la carpeta graphs_.
-- **vizproo/layouts.py**: Contiene la implementación de como mostrar los Dashboards en Python.
-- **vizproo/widgets.py**: Contiene la implementación de como mostrar los widgets en Python.
-- **vizproo/custom.py**: Contiene la implementación para importar gráficos personalizados de D3.js en Python.
-## ¿Cómo agregar un nuevo gráfico?
-Para esto es necesario tener conocimientos básicos de D3.js, TypeScript y programación orientada a objetos en Python.
+## Arquitectura 🧱
+VizProo se distribuye en dos paquetes:
+- Python (paquete vizproo): integra con Jupyter (ipywidgets) y expone la API al usuario.
+- TypeScript (paquete vizproo-js): renderiza gráficos y widgets usando D3.js.
 
-Se puede comenzar a escribir primero el backend (TypeScript) y luego el frontend (Python) o viceversa. A continuación, se describen los pasos generales para agregar un nuevo gráfico a VizProo:
+Estructura principal:
 
-1. **Crear el gráfico en TypeScript**:
-   - Navega a la carpeta `src/graphs/` y crea un nuevo archivo para tu gráfico, por ejemplo, `my_graph.ts`.
-   - Implementa la lógica de visualización utilizando D3.js y asegúrate de que el gráfico pueda recibir datos y configuraciones desde el frontend (puedes guiarte por los gráficos existentes).
-   - Es obligatorio tener estas 3 clases:
-   - export class my_graph extends BasePlot (Obligatorio heredar de BasePlot)
-   - export class RadVizModel extends BaseModel (Obligatorio heredar de BaseModel)
-   - export class RadVizView extends BaseView (Obligatorio heredar de BaseView)
-Es obligatorio tener las tres clases porque la primera es la que se encarga de la lógica del gráfico, la segunda es la que maneja el modelo de datos y la tercera es la que maneja la vista del gráfico.
+Backend (TypeScript, carpeta src):
+- src/base/: Clases base (Plot, Model, View).
+- src/const/: Constantes globales.
+- src/graphs/: Implementaciones de gráficos.
+- src/widgets/: Widgets genéricos.
+- src/layouts/: Dashboards.
+- src/extension.ts: Conexión ipywidgets ↔ D3.js.
+- src/index.ts: Punto de exportación.
+- src/plugin.ts: Activación de la extensión.
+- src/version.ts: Versión del paquete JS.
+- css/: Estilos.
 
-1. **Crear el gráfico en Python**:
-   - Navega a la carpeta `vizproo/graphs_` y crea un nuevo archivo para tu gráfico, por ejemplo, `my_graph.py`.
-   - Implementa la clase del gráfico en Python, asegurándote de que herede de `BaseWidget` y defina los atributos necesarios para la configuración del gráfico.
-    @widgets.register 
-    class MyGraph(BaseWidget):
-    - Asegurate de que los atributos de la clase coincidan con los definidos en el backend (TypeScript) para que puedan comunicarse correctamente.
-    - Exportarlo en el archivo `vizproo/__init__.py`.
-    - Importarlo en el archivo `vizproo/graphs.py`.
-  
-Esos son los pasos generales para agregar un nuevo gráfico a VizProo. Asegúrate de probar tu gráfico en un entorno Jupyter Notebook para verificar que funcione correctamente y que la comunicación entre el frontend y el backend sea exitosa.
+Frontend (Python, carpeta vizproo):
+- vizproo/graphs_/: Gráficos en Python.
+- vizproo/base_widget.py: Clase base.
+- vizproo/graphs.py: Re-exportación de gráficos.
+- vizproo/layouts.py: Dashboards en Python.
+- vizproo/widgets.py: Widgets en Python.
+- vizproo/custom.py: Gráficos personalizados D3.
+- vizproo/_frontend.py / _version.py / __init__.py: Metadatos y registro.
+
+## Añadir un nuevo gráfico ➕
+Requiere nociones de D3.js, TypeScript y POO en Python.
+
+### 1. Lado TypeScript 🧩
+1. Crear archivo en src/graphs/, ej: my_graph.ts.
+2. Definir tres clases obligatorias:
+   - export class MyGraph extends BasePlot
+   - export class MyGraphModel extends BaseModel
+   - export class MyGraphView extends BaseView
+3. Recibir datos y opciones vía atributos del Model.
+4. Registrar exportaciones en src/index.ts si aplica.
+
+Ejemplo mínimo:
+```ts
+// src/graphs/my_graph.ts
+export class MyGraph extends BasePlot { /* lógica de rendering */ }
+export class MyGraphModel extends BaseModel { /* estado y sync */ }
+export class MyGraphView extends BaseView { /* DOM + eventos */ }
+```
+
+### 2. Lado Python 🐍
+1. Crear archivo vizproo/graphs_/my_graph.py.
+2. Heredar de BaseWidget y registrar el widget:
+```python
+# vizproo/graphs_/my_graph.py
+from vizproo.base_widget import BaseWidget
+from ipywidgets import register
+
+@register
+class MyGraph(BaseWidget):
+    _model_name = "MyGraphModel"
+    _view_name = "MyGraphView"
+    _model_module = "vizproo-js"
+    _view_module = "vizproo-js"
+    _model_module_version = "^0.1.0"
+    _view_module_version = "^0.1.0"
+    # def __init__(self, data=None, **kwargs):
+    #     super().__init__(data=data, **kwargs)
+```
+3. Importar en vizproo/graphs.py y opcionalmente exponer en __init__.py.
+4. Probar en Jupyter: instanciar y verificar sincronización.
+
+### 3. Pruebas ✅
+- Cargar un DataFrame y pasar al widget.
+- Validar eventos (selección / actualización).
+- Revisar consola del navegador ante errores.
+
+## Consejos 🔧
+- Mantén nombres de atributos consistentes entre Python y TypeScript.
+- Usa entornos virtuales para aislar dependencias.
+- Ejecuta npm run build tras cambios en TypeScript.
+- Añade ejemplos en examples/ para facilitar revisión.
+
+## Próximo Paso 🚀
+Cuando tu gráfico funcione: abre un issue o PR describiendo objetivo, API y capturas. 

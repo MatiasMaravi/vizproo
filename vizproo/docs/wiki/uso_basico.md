@@ -1,19 +1,35 @@
-# Inicio Rápido de VizProo
-VizProo es una herramienta poderosa para la visualización de datos en Python. A continuación, se detallan los pasos básicos para comenzar a utilizar VizProo en sus proyectos.
-Primero aseguúrese de tener VizProo instalado. Si aún no lo ha hecho, consulte la guía de [Instalación](./instalación.md).
+# Inicio Rápido de VizProo ⚡
+VizProo es una herramienta para la visualización interactiva de datos en Python. Aquí verás cómo dar tus primeros pasos rápidamente.  
+Primero asegúrese de tener VizProo instalado. Si no lo ha hecho, revise la guía de [Instalación](./instalación.md) 🛠.
 
-## Requisitos Previos
-Por el momento VizProo puede trabajar en entornos Jupyter Notebook, JupyterLab y notebooks de Visual Studio Code. Próximamente se agregarán más entornos compatibles como google colab.
+## Requisitos Previos 📋
+Actualmente soportado:
+- Jupyter Notebook / JupyterLab
+- Notebooks de Visual Studio Code
 
-## Uso Básico
-Abre el notebook [introduction](../../examples/introduction.ipynb) ubicado en la carpeta "examples" del repositorio de VizProo. Este notebook contiene ejemplos prácticos que te guiarán a través de las funcionalidades básicas de VizProo.
-Entre ellos se encuentran:
-- Cómo plotear tu primer gráfico con VizProo.
-- Cómo interactuar con los gráficos generados.
-- Cómo obtener los datos seleccionados de los gráficos en celdas posteriores para su análisis.
+Próximamente (🧪): Google Colab y otros entornos.
 
-## Próximos Pasos
-Una vez que te sientas cómodo con los conceptos básicos, puedes explorar más funcionalidades avanzadas de VizProo. Te recomendamos revisar las siguientes secciones de la documentación:
-- [Custom Charts](./custom_charts.md): Aprende a importar y utilizar gráficos personalizados de D3.js en VizProo.
-- [Dashboards](./dashboards.md): Descubre cómo crear dashboards interactivos utilizando múltiples gráficos de VizProo.
-- [Desarrollo](./desarrollo.md): Si estás interesado en contribuir al desarrollo de VizProo, esta sección te proporcionará la información necesaria para comenzar.
+## Uso Básico 🧪
+1. Abra el notebook [introduction](../../examples/introduction.ipynb) dentro de la carpeta examples.
+2. Importe la librería y cargue datos (por ejemplo con pandas).
+3. Genere su primer gráfico.
+
+    ```python
+    from vizproo import Chart  # Ejemplo simplificado
+    # df = ... (DataFrame)
+    chart = Chart(df)  # API ilustrativa
+    chart.show()
+    ```
+
+Ese notebook incluye ejemplos sobre:
+- Crear tu primer gráfico 🎯
+- Interacciones y selección de puntos 🖱️
+- Recuperar datos seleccionados para análisis posterior 📊
+
+## Próximos Pasos 🚀
+Explora funcionalidades avanzadas:
+- [Custom Charts](./custom_charts.md) 🧩: Integrar gráficos personalizados con D3.js.
+- [Dashboards](./dashboards.md) 🗂️: Componer vistas interactivas con múltiples gráficos.
+- [Desarrollo](./desarrollo.md) 🧪: Guía para contribuir y extender VizProo.
+
+Consejo 💡: Usa entornos virtuales para aislar dependencias.
