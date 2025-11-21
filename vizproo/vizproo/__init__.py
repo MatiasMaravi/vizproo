@@ -4,8 +4,11 @@
 # Copyright (c) MATIUS.
 # Distributed under the terms of the Modified BSD License.
 import sys
-from .example import ExampleWidget
 from ._version import __version__, version_info
+from .widgets import *
+from .graphs import *
+from .layouts import *
+from .custom import CustomWidget
 
 if "google.colab.output" in sys.modules:
     sys.modules["google.colab.output"].enable_custom_widget_manager()

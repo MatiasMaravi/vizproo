@@ -7,7 +7,11 @@ import { Widget } from '@lumino/widgets';
 
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
-import * as widgetExports from './widget';
+import * as widgetExports from './widgets';
+
+import * as graphExports from './graphs';
+
+import * as layoutExports from './layouts';
 
 import { MODULE_NAME, MODULE_VERSION } from './version';
 
@@ -37,6 +41,8 @@ function activateWidgetExtension(
   registry.registerWidget({
     name: MODULE_NAME,
     version: MODULE_VERSION,
-    exports: widgetExports,
+    exports: { ...widgetExports, 
+              ...graphExports, 
+              ...layoutExports }
   });
 }

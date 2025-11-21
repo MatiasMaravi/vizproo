@@ -1,0 +1,256 @@
+/* Estilos SOLO para MatrixCreator */
+.matrix-grid .matrix-cell {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border: 2px solid #34495e;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: white;
+    outline: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.matrix-grid .matrix-cell:hover {
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    z-index: 10;
+    border-color: #667eea;
+}
+
+.matrix-grid .matrix-cell.selecting {
+    background: rgba(102, 126, 234, 0.3);
+    border-color: #667eea;
+    box-shadow: inset 0 0 8px rgba(102, 126, 234, 0.4);
+    z-index: 5;
+}
+
+/* Aplicar border más grueso solo a celdas con grupo EN MATRIX-GRID */
+.matrix-grid .matrix-cell[data-group]:not([data-group="0"]) {
+    border: 2px solid white;
+    margin: 0;
+}
+
+
+
+
+/* Estilos para MatrixCreator */
+.matrix-grid {
+    display: inline-block;
+    padding: 1rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-out;
+    border: 3px solid #000000;
+    overflow: visible; /* Cambiado de hidden a visible para permitir el scale */
+    position: relative; /* Añadido para contexto de posicionamiento */
+}
+
+.matrix-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+}
+
+
+/* Contenedor de matriz */
+.matrix-container {
+    display: flex;
+    flex-direction: column; /* Cambiado para apilar matriz y mensaje */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Espacio entre matriz y mensaje */
+    min-height: 200px;
+    padding: 20px;
+}
+
+/* Contenedor del mensaje de confirmación */
+.message-container {
+    min-height: 60px; /* Aumentado para evitar saltos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.confirmation-message {
+    background: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.confirmation-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.confirmation-message.error-message {
+    background: #e74c3c;
+}
+
+.check-icon {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Estilos para el panel de control */
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: 250px;
+    align-self: flex-start; /* Mantener el panel en la parte superior */
+}
+
+
+.group-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.group-label {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+}
+
+.current-group-display {
+    font-weight: bold;
+    padding: 8px 20px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1.3em;
+    min-width: 50px;
+    text-align: center;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.matrix-button {
+    padding: 8px 16px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background: #3498db;
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s;
+    min-width: 150px;
+}
+
+.matrix-button:hover {
+    background: #2980b9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.matrix-button:active {
+    transform: translateY(1px);
+}
+
+/* Estilos para el contenedor de MatrixCreator */
+.matrix-creator-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsive para MatrixCreator */
+@media (max-width: 768px) {
+    .matrix-cell {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8em;
+    }
+    
+    .control-panel {
+        padding: 15px;
+    }
+    
+    .matrix-button {
+        min-width: 120px;
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
+    
+    .matrix-creator-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* Animación de fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/***** EMBEDDING - Estilos para MatrixLayout *****/
+.basic .dashboard-div {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.dark .dashboard-div {
+  margin: 2px;
+  border-radius: 10px;
+  background-color: #262626;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.glassmorphism .dashboard-div {
+  margin: 5px;
+  border-radius: 10px;
+  background: rgb(255, 254, 254);
+  border: 1px solid rgb(255, 255, 255);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.neumorphism .dashboard-div {
+  margin: 10px;
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+}
+
+.minimalism .dashboard-div {
+  margin-bottom: 5px;
+}

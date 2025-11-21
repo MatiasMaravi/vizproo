@@ -1,0 +1,42 @@
+/***** BARPLOT *****/
+.bar {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.bar:hover {
+    opacity: 0.8;
+}
+.bar.selected {
+    stroke: #000;
+    stroke-width: 3px;
+    opacity: 1 !important;
+}
+
+
+/*** Estilos para HorizonChart ***/
+.horizon-series {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.horizon-series.selected {
+    stroke: #000;
+    stroke-width: 2px;
+    opacity: 1 !important;
+}
+.horizon-series:hover {
+    opacity: 0.8;
+}
+
+/*** ScatterPlot ***/
+.scatter_dot {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.scatter_dot:hover {
+    opacity: 0.8;
+}
+.scatter_dot.selected {
+    stroke: #000;
+    stroke-width: 2px;
+    opacity: 1 !important;
+}

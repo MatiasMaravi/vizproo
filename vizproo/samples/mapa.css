@@ -1,0 +1,15 @@
+.mapa-svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.mapa-states {
+    fill: white;  /* Cambiado de #444 a blanco */
+    cursor: pointer;
+}
+
+.mapa-mesh {
+    fill: none;
+    stroke: black;
+    stroke-linejoin: round;
+}
