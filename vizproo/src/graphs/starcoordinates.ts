@@ -10,11 +10,29 @@ import {
 
 import { StarCoordinatesParams, StarCoordinatesPoint, StarCoordinatesAnchor } from "./interface";
 
+/**
+ * Visualización Star Coordinates interactiva.
+ * Proyecta puntos usando dimensiones como anclas en un plano y permite selección.
+ */
 export class StarCoordinates extends BasePlot {
+    /**
+     * Radio del dial principal.
+     */
     private chartRadius: number = 0;
+    /**
+     * Centro X del dial (coordenadas del gráfico).
+     */
     private centerX: number = 0;
+    /**
+     * Centro Y del dial (coordenadas del gráfico).
+     */
     private centerY: number = 0;
 
+    /**
+     * Crea anclas distribuidas uniformemente en el círculo unitario.
+     * @param dimensions - Lista de dimensiones a anclar.
+     * @returns Arreglo de anclas con coordenadas normalizadas.
+     */
     private createAnchors(dimensions: string[]): StarCoordinatesAnchor[] {
         const n = dimensions.length;
         return dimensions.map((feature, i) => {
@@ -27,6 +45,12 @@ export class StarCoordinates extends BasePlot {
         });
     }
 
+    /**
+     * Crea escalas de normalización [0,1] por dimensión.
+     * @param data - Datos originales.
+     * @param dimensions - Dimensiones a normalizar.
+     * @returns Mapa dimensión -> escala lineal.
+     */
     private createNormalizationScales(data: any[], dimensions: string[]): Record<string, d3.ScaleLinear<number, number>> {
         const scales: Record<string, d3.ScaleLinear<number, number>> = {};
         for (const key of dimensions) {
@@ -38,6 +62,14 @@ export class StarCoordinates extends BasePlot {
         return scales;
     }
 
+    /**
+     * Calcula posiciones Star Coordinates para cada fila.
+     * @param data - Datos originales.
+     * @param dimensions - Dimensiones usadas para ponderar.
+     * @param anchors - Anclas con coordenadas unitarias.
+     * @param scales - Escalas de normalización por dimensión.
+     * @returns Puntos posicionados con referencia al dato original.
+     */
     private calculateStarCoordinatesPositions(
         data: any[], 
         dimensions: string[], 
@@ -63,6 +95,10 @@ export class StarCoordinates extends BasePlot {
         });
     }
 
+    /**
+     * Renderiza Star Coordinates: crea dial, anclas, puntos y herramientas de selección.
+     * @param params - Datos, dimensiones, hue, callbacks y dimensiones del contenedor.
+     */
     plot(params: StarCoordinatesParams) {
         const { 
             data, 
@@ -380,7 +416,14 @@ export class StarCoordinates extends BasePlot {
     }
 }
 
+/**
+ * Modelo para StarCoordinates.
+ * Define nombres de modelo/vista.
+ */
 export class StarCoordinatesModel extends BaseModel {
+    /**
+     * Valores por defecto del modelo.
+     */
     defaults() {
         return {
             ...super.defaults(),
@@ -390,13 +433,30 @@ export class StarCoordinatesModel extends BaseModel {
     }
 }
 
+/**
+ * Vista para StarCoordinates.
+ * Construye parámetros, renderiza y sincroniza selección con el modelo.
+ */
 export class StarCoordinatesView extends BaseView {
     model: StarCoordinatesModel;
 
+    /**
+     * Datos del modelo.
+     */
     get dataRecords() { return this.model.get("dataRecords"); }
+    /**
+     * Dimensiones usadas como anclas.
+     */
     get dimensions() { return this.model.get("dimensions"); }
+    /**
+     * Columna opcional para color.
+     */
     get hue() { return this.model.get("hue"); }
 
+    /**
+     * Obtiene los parámetros desde el modelo y el layout calculado.
+     * @returns Parámetros de renderizado para Star Coordinates.
+     */
     params(): StarCoordinatesParams {
         return {
             data: this.dataRecords,
@@ -409,6 +469,10 @@ export class StarCoordinatesView extends BaseView {
         };
     }
 
+    /**
+     * Inicializa el widget, conecta listeners de cambios y renderiza.
+     * @param element - Elemento contenedor del widget.
+     */
     plot(element: HTMLElement) {
         this.widget = new StarCoordinates(element);
 
@@ -420,6 +484,10 @@ export class StarCoordinatesView extends BaseView {
         this.widget.plot(this.params());
     }
 
+    /**
+     * Actualiza en el modelo los valores seleccionados y persiste cambios.
+     * @param values - Filas seleccionadas del gráfico.
+     */
     setSelectedValues(values: any[]) {
         this.model.set({ selectedValuesRecords: values });
         this.model.save_changes();

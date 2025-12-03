@@ -2,6 +2,10 @@ import { BaseModel, BaseView } from "../base/base";
 import { BaseWidget } from "../base/base_widget";
 import "../../css/layout.css";
 
+/**
+ * Parámetros del layout matricial.
+ * Define matriz, áreas y estilos de grid CSS.
+ */
 export interface MatrixParams {
 	matrix: number[][],
 	grid_areas: string[],
@@ -11,13 +15,27 @@ export interface MatrixParams {
 	columns?: number
 }
 
-
+/**
+ * Widget para renderizar un layout CSS Grid a partir de una matriz.
+ * Crea contenedores por área y aplica estilos de grid.
+ */
 class MatrixLayout extends BaseWidget {
 
+	/**
+	 * Crea una instancia del layout.
+	 * @param element - Elemento contenedor del widget.
+	 */
 	constructor(element: HTMLElement) {
 		super(element);
 	}
 
+	/**
+	 * Crea el contenedor principal configurado como CSS Grid.
+	 * @param matrix - Matriz base para filas y columnas.
+	 * @param style - Clase CSS aplicada al contenedor.
+	 * @param grid_template_areas - Definición de áreas para grid-template-areas.
+	 * @returns Elemento DOM configurado como grid.
+	 */
 	create_node(matrix: number[][],
 		style: string,
 		grid_template_areas: string): HTMLElement {
@@ -33,6 +51,10 @@ class MatrixLayout extends BaseWidget {
 		return node;
 	}
 
+	/**
+	 * Renderiza el layout: crea el grid y añade las áreas definidas.
+	 * @param params - Parámetros del layout y configuración de CSS Grid.
+	 */
 	plot(params: MatrixParams): void {
 		const { matrix, grid_areas, grid_template_areas } = params;
 		let { style } = params;
@@ -54,7 +76,14 @@ class MatrixLayout extends BaseWidget {
 	}
 }
 
+/**
+ * Modelo para MatrixLayout.
+ * Define nombres de modelo/vista y propiedades reactivas.
+ */
 export class MatrixLayoutModel extends BaseModel {
+	/**
+	 * Valores por defecto del modelo, incluyendo matriz, áreas, template y estilo.
+	 */
 	defaults() {
 		return {
 			...super.defaults(),
@@ -68,11 +97,21 @@ export class MatrixLayoutModel extends BaseModel {
 		};
 	}
 
+	/**
+	 * Nombre de la clase de modelo y vista.
+	 */
 	public static readonly model_name = "MatrixLayoutModel";
 	public static readonly view_name = "MatrixLayoutView";
 }
 
+/**
+ * Vista que integra MatrixLayout con Jupyter.
+ * Orquesta el render usando requestAnimationFrame cuando está disponible.
+ */
 export class MatrixLayoutView extends BaseView<MatrixLayout> {
+	/**
+	 * Obtiene los parámetros de render desde el modelo.
+	 */
 	params() {
 		return {
 			matrix: this.model.get("matrix"),
@@ -82,7 +121,12 @@ export class MatrixLayoutView extends BaseView<MatrixLayout> {
 		};
 	}
 
-
+	/**
+	 * Inicializa el widget y ejecuta el render.
+	 * @param element - Elemento contenedor del widget.
+	 * @remarks
+	 * Usa requestAnimationFrame para un render no bloqueante si está disponible.
+	 */
 	plot(element: HTMLElement): void {
 		console.log("=== MatrixLayoutView.plot() called ===");
 		this.widget = new MatrixLayout(element);

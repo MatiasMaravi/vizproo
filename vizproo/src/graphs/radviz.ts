@@ -7,14 +7,32 @@ import {
     DeselectAllButton,
     SideBar
 } from "./tools/tools";
-
 import { RadVizParams, RadVizPoint, RadVizAxis } from "./interface";
 
+/**
+ * Visualización RadViz interactiva.
+ * Calcula posiciones de puntos en un círculo según múltiples dimensiones
+ * y soporta selección por clic y caja con barra lateral.
+ */
 export class RadViz extends BasePlot {
+    /**
+     * Radio del dial principal.
+     */
     private chartRadius: number = 0;
+    /**
+     * Centro X del dial (en coordenadas de gráfico).
+     */
     private centerX: number = 0;
+    /**
+     * Centro Y del dial (en coordenadas de gráfico).
+     */
     private centerY: number = 0;
 
+    /**
+     * Crea los ejes (anclas) distribuidos uniformemente en el círculo.
+     * @param dimensions - Lista de dimensiones a anclar.
+     * @returns Arreglo de ejes con ángulo y coordenadas normalizadas.
+     */
     private createAxes(dimensions: string[]): RadVizAxis[] {
         const n = dimensions.length;
         return dimensions.map((key, i) => ({
@@ -25,6 +43,12 @@ export class RadViz extends BasePlot {
         }));
     }
 
+    /**
+     * Crea escalas de normalización [0,1] por dimensión.
+     * @param data - Datos originales.
+     * @param dimensions - Dimensiones a normalizar.
+     * @returns Map de dimensión -> escala lineal.
+     */
     private createNormalizationScales(data: any[], dimensions: string[]): Record<string, d3.ScaleLinear<number, number>> {
         const scales: Record<string, d3.ScaleLinear<number, number>> = {};
         for (const key of dimensions) {
@@ -34,6 +58,14 @@ export class RadViz extends BasePlot {
         return scales;
     }
 
+    /**
+     * Calcula posiciones RadViz para cada fila.
+     * @param data - Datos originales.
+     * @param dimensions - Dimensiones usadas para ponderar.
+     * @param axes - Ejes con coordenadas unitarias.
+     * @param scales - Escalas de normalización por dimensión.
+     * @returns Puntos posicionados con referencia al original.
+     */
     private calculateRadVizPositions(
         data: any[], 
         dimensions: string[], 
@@ -63,6 +95,10 @@ export class RadViz extends BasePlot {
         });
     }
 
+    /**
+     * Renderiza RadViz: crea dial, ejes, puntos y herramientas de selección.
+     * @param params - Datos, dimensiones, hue, callbacks y dimensiones del contenedor.
+     */
     plot(params: RadVizParams): void {
         const { data, dimensions, hue, setSelectedValues, width, height, noSideBar } = params;
         let actualWidth = width;
@@ -301,7 +337,14 @@ export class RadViz extends BasePlot {
     }
 }
 
+/**
+ * Modelo para RadViz.
+ * Define propiedades reactivas: datos, dimensiones, hue y selección.
+ */
 export class RadVizModel extends BaseModel {
+    /**
+     * Valores por defecto del modelo.
+     */
     defaults() {
         return {
             ...super.defaults(),
@@ -315,11 +358,22 @@ export class RadVizModel extends BaseModel {
         };
     }
 
+    /**
+     * Nombre de la clase de modelo y vista.
+     */
     static readonly model_name = "RadVizModel";
     static readonly view_name = "RadVizView";
 }
 
+/**
+ * Vista para RadViz.
+ * Construye parámetros, renderiza y sincroniza selección con el modelo.
+ */
 export class RadVizView extends BaseView<RadViz> {
+    /**
+     * Obtiene los parámetros desde el modelo y el layout calculado.
+     * @returns Parámetros de renderizado para RadViz.
+     */
     params(): RadVizParams {
         return {
             data: this.model.get("dataRecords"),
@@ -332,6 +386,10 @@ export class RadVizView extends BaseView<RadViz> {
         };
     }
 
+    /**
+     * Inicializa el widget, conecta listeners de cambios y renderiza.
+     * @param element - Elemento contenedor del widget.
+     */
     plot(element: HTMLElement) {
         this.widget = new RadViz(element);
 
@@ -342,6 +400,10 @@ export class RadVizView extends BaseView<RadViz> {
         this.widget.plot(this.params());
     }
 
+    /**
+     * Actualiza en el modelo los valores seleccionados y persiste cambios.
+     * @param values - Filas seleccionadas del gráfico.
+     */
     setSelectedValues(values: any[]) {
         this.model.set({ selectedValuesRecords: values });
         this.model.save_changes();

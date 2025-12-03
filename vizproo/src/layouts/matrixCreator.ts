@@ -2,6 +2,10 @@ import { BaseModel, BaseView } from "../base/base";
 import { BaseWidget } from "../base/base_widget";
 import "../../css/layout.css";
 
+/**
+ * Parámetros del creador de matrices.
+ * Define la matriz base y configuración del grid.
+ */
 export interface MatrixParams {
     matrix: number[][],
     grid_areas: string[],
@@ -9,17 +13,30 @@ export interface MatrixParams {
     columns?: number
 }
 
+/**
+ * Widget interactivo para crear y etiquetar grupos en una matriz.
+ * Permite seleccionar áreas rectangulares asignándolas a contenedores (grupos).
+ */
 class MatrixCreator extends BaseWidget {
     private currentGroup: number = 1;
     private isDragging: boolean = false;
     private startCell: HTMLElement | null = null;
     private readonly groupColors: string[] = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999'];
 
+    /**
+     * Crea una instancia del MatrixCreator y registra listeners globales.
+     * @param element - Elemento raíz donde se renderiza el widget.
+     */
     constructor(element: HTMLElement) {
         super(element);
         this.setupGlobalEventListeners();
     }
 
+    /**
+     * Registra listeners globales para manejar fin de arrastre.
+     * @remarks
+     * Limpia estado de selección al soltar el mouse en el documento.
+     */
     private setupGlobalEventListeners(): void {
         document.addEventListener('mouseup', () => {
             this.isDragging = false;
@@ -27,12 +44,21 @@ class MatrixCreator extends BaseWidget {
         });
     }
 
+    /**
+     * Crea el nodo contenedor principal del widget.
+     * @returns Un elemento DIV con la clase del contenedor.
+     */
     create_node(): HTMLElement {
         const node = document.createElement("div");
         node.classList.add("matrix-creator-container");
         return node;
     }
 
+    /**
+     * Construye el grid interactivo de la matriz.
+     * @param matrix - Matriz base que define filas y columnas.
+     * @returns Elemento DOM con la estructura del grid.
+     */
     private createMatrixGrid(matrix: number[][]): HTMLElement {
         const matrixGrid = document.createElement("div");
         matrixGrid.className = "matrix-grid";
@@ -62,6 +88,11 @@ class MatrixCreator extends BaseWidget {
         return matrixGrid;
     }
 
+    /**
+     * Crea el panel de control con acciones del usuario.
+     * @param containerElement - Contenedor principal del widget.
+     * @returns Elemento DOM del panel de control.
+     */
     private createControlPanel(containerElement: HTMLElement): HTMLElement {
         const controlPanel = document.createElement("div");
         controlPanel.className = "control-panel";
@@ -112,6 +143,11 @@ class MatrixCreator extends BaseWidget {
         return controlPanel;
     }
 
+    /**
+     * Crea un botón estilizado con manejador de clic.
+     * @param text - Texto del botón.
+     * @param onClick - Callback a ejecutar al hacer clic.
+     */
     private createButton(text: string, onClick: () => void): HTMLElement {
         const button = document.createElement("button");
         button.textContent = text;
@@ -120,6 +156,11 @@ class MatrixCreator extends BaseWidget {
         return button;
     }
 
+    /**
+     * Inicia la selección de celdas para asignarlas a un grupo.
+     * @param e - Evento de mouse down.
+     * @param cell - Celda DOM objetivo.
+     */
     private handleMouseDown(e: MouseEvent, cell: HTMLElement): void {
         e.preventDefault();
         this.isDragging = true;
@@ -129,6 +170,11 @@ class MatrixCreator extends BaseWidget {
         cell.style.background = 'rgba(102, 126, 234, 0.3)';
     }
 
+    /**
+     * Actualiza la selección temporal mientras el usuario arrastra.
+     * @param e - Evento de mouse enter.
+     * @param cell - Celda DOM bajo el cursor.
+     */
     private handleMouseEnter(e: MouseEvent, cell: HTMLElement): void {
         if (!this.isDragging || !this.startCell) return;
 
@@ -159,6 +205,11 @@ class MatrixCreator extends BaseWidget {
         }
     }
 
+    /**
+     * Finaliza la selección y asigna el grupo actual a las celdas seleccionadas.
+     * @param e - Evento de mouse up.
+     * @param cell - Celda DOM final del arrastre.
+     */
     private handleMouseUp(e: MouseEvent, cell: HTMLElement): void {
         if (!this.isDragging || !this.startCell) return;
 
@@ -194,6 +245,9 @@ class MatrixCreator extends BaseWidget {
         this.startCell = null;
     }
 
+    /**
+     * Limpia la selección temporal visual.
+     */
     private clearTemporarySelection(): void {
         const selectingCells = document.querySelectorAll('.matrix-cell.selecting');
         for (const cell of Array.from(selectingCells)) {
@@ -206,6 +260,12 @@ class MatrixCreator extends BaseWidget {
         }
     }
 
+    /**
+     * Avanza al siguiente grupo si el actual ya contiene celdas.
+     * Cicla entre 1 y 9.
+     * @remarks
+     * Evita crear grupos vacíos para mantener consistencia en el layout.
+     */
     private nextGroup(): void {
         // Verificar si el grupo actual tiene celdas asignadas
         if (!this.hasGroupCells(this.currentGroup)) {
@@ -219,6 +279,11 @@ class MatrixCreator extends BaseWidget {
         }
     }
 
+    /**
+     * Verifica si existen celdas asignadas a un grupo.
+     * @param groupNumber - Número del grupo a verificar.
+     * @returns Verdadero si el grupo tiene al menos una celda.
+     */
     private hasGroupCells(groupNumber: number): boolean {
         // Buscar si existen celdas con el grupo actual asignado
         const cells = document.querySelectorAll('.matrix-cell');
@@ -232,6 +297,10 @@ class MatrixCreator extends BaseWidget {
         return false;
     }
 
+    /**
+     * Reinicia los grupos y estilos a su estado inicial.
+     * @param container - Contenedor con el grid de la matriz.
+     */
     private resetGroups(container: HTMLElement): void {
         this.currentGroup = 1;
         const cells = container.querySelectorAll('.matrix-cell');
@@ -245,11 +314,21 @@ class MatrixCreator extends BaseWidget {
         }
     }
 
+    /**
+     * Actualiza el display del grupo actual en el panel de control.
+     * @param displayElement - Elemento donde se muestra el grupo.
+     */
     private updateGroupDisplay(displayElement: HTMLElement): void {
         displayElement.textContent = this.currentGroup.toString();
         displayElement.style.backgroundColor = this.groupColors[this.currentGroup - 1];
     }
 
+    /**
+     * Lee la matriz desde el DOM, valida grupos y emite un evento con el resultado.
+     * @param container - Contenedor que incluye el grid y filas.
+     * @remarks
+     * Emite el evento `matrix_generated` con el detalle `{ matrix }` para sincronización.
+     */
     private showMatrix(container: HTMLElement): void {
         const matrix: number[][] = [];
         const rows = container.querySelectorAll('.matrix-row');
@@ -278,6 +357,11 @@ class MatrixCreator extends BaseWidget {
         this.showConfirmationMessage(matrix);
     }
 
+    /**
+     * Valida que todos los grupos no vacíos formen rectángulos.
+     * @param matrix - Matriz con números de grupo.
+     * @returns Verdadero si todos los grupos son rectangulares.
+     */
     private validateGroupsAreRectangular(matrix: number[][]): boolean {
         // Obtener todos los grupos únicos (excepto 0)
         const uniqueGroups = new Set<number>();
@@ -299,6 +383,12 @@ class MatrixCreator extends BaseWidget {
         return true;
     }
 
+    /**
+     * Verifica si un grupo específico ocupa un rectángulo perfecto.
+     * @param matrix - Matriz con números de grupo.
+     * @param groupNumber - Grupo a validar.
+     * @returns Verdadero si el grupo ocupa un rectángulo sin huecos.
+     */
     private isGroupRectangular(matrix: number[][], groupNumber: number): boolean {
         // Encontrar todas las posiciones del grupo
         const positions: Array<{ row: number; col: number }> = [];
@@ -338,6 +428,10 @@ class MatrixCreator extends BaseWidget {
         return true;
     }
 
+    /**
+     * Muestra un mensaje de confirmación visual cuando se guarda el layout.
+     * @param matrix - Matriz resultante que se ha guardado.
+     */
     private showConfirmationMessage(matrix: number[][]): void {
         // Buscar el contenedor del mensaje
         const messageContainer = document.getElementById('matrix-message-container');
@@ -382,6 +476,10 @@ class MatrixCreator extends BaseWidget {
         }, 3000);
     }
 
+    /**
+     * Muestra un mensaje de error visual.
+     * @param errorText - Texto descriptivo del error.
+     */
     private showErrorMessage(errorText: string): void {
         // Buscar el contenedor del mensaje
         const messageContainer = document.getElementById('matrix-message-container');
@@ -427,6 +525,12 @@ class MatrixCreator extends BaseWidget {
         }, 4000);
     }
 
+    /**
+     * Genera una matriz de dimensiones dadas con valores incrementales.
+     * @param rows - Número de filas.
+     * @param columns - Número de columnas.
+     * @returns Matriz generada.
+     */
     private generateMatrix(rows: number, columns: number): number[][] {
         const matrix: number[][] = [];
         let value = 1;
@@ -446,6 +550,12 @@ class MatrixCreator extends BaseWidget {
         return matrix;
     }
 
+    /**
+     * Renderiza el widget: crea el grid, panel de control y contenedor de mensajes.
+     * Si no se provee una matriz válida, genera una por defecto.
+     * @param params - Parámetros de configuración y datos del widget.
+     * @returns Nodo principal que contiene el layout.
+     */
     plot(params: MatrixParams): HTMLElement {
         let { matrix, rows, columns } = params;
 
@@ -485,7 +595,14 @@ class MatrixCreator extends BaseWidget {
     }
 }
 
+/**
+ * Modelo del widget MatrixCreator.
+ * Define traits y nombres de modelo/vista.
+ */
 export class MatrixCreatorModel extends BaseModel {
+    /**
+     * Valores por defecto del modelo, incluidos matriz y dimensiones.
+     */
     defaults() {
         return {
             ...super.defaults(),
@@ -497,11 +614,21 @@ export class MatrixCreatorModel extends BaseModel {
             columns: 3,
         };
     }
+    /**
+     * Nombre del modelo y de la vista asociados.
+     */
     public static readonly model_name = "MatrixCreatorModel";
     public static readonly view_name = "MatrixCreatorView";
 }
 
+/**
+ * Vista que integra MatrixCreator con el ciclo de vida Jupyter.
+ * Escucha el evento `matrix_generated` y sincroniza con Python.
+ */
 export class MatrixCreatorView extends BaseView<MatrixCreator> {
+    /**
+     * Construye los parámetros de render desde el modelo Jupyter.
+     */
     params(): MatrixParams {
         const rowsStr = this.model.get("rows");
         const columnsStr = this.model.get("columns");
@@ -514,6 +641,11 @@ export class MatrixCreatorView extends BaseView<MatrixCreator> {
         };
     }
 
+    /**
+     * Inicializa MatrixCreator y conecta el evento `matrix_generated`
+     * para enviar cambios al backend de Jupyter.
+     * @param element - Elemento contenedor del widget.
+     */
     plot(element: HTMLElement): void {
         const matrixCreator = new MatrixCreator(element);
         const params = this.params();

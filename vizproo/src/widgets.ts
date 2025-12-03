@@ -1,7 +1,9 @@
 // Copyright (c) MATIUS
 // Distributed under the terms of the Modified BSD License.
 
-
+/**    
+ * Exports all the widgets.
+ */
 export {ButtonModel, ButtonView} from "./widgets/button";
 export {CheckboxModel, CheckboxView} from "./widgets/checkbox";
 export {DropdownModel, DropdownView} from "./widgets/dropdown";

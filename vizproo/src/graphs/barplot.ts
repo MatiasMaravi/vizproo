@@ -8,7 +8,6 @@ import {
     SideBar
 } from "./tools/tools";
  
-
 import { 
         BarPlotParams,
         AggregatedValues,
@@ -16,7 +15,19 @@ import {
         ScaleConfig
     } from "./interface";
 
+/**
+ * Gráfico de barras interactivo.
+ * Soporta orientación vertical/horizontal, selección por clic/caja y barra lateral.
+ */
 export class BarPlot extends BasePlot {
+    /**
+     * Normaliza datos según la orientación (vertical/horizontal).
+     * @param direction - Dirección del gráfico ('vertical' | 'horizontal').
+     * @param xValue - Nombre de la columna para el eje X.
+     * @param yValue - Nombre de la columna para el eje Y.
+     * @param data - Datos originales.
+     * @returns Datos con claves auxiliares x_ y y_ además de un id.
+     */
     private verifyDirection(direction: string, xValue: string, yValue: string, data: any[]): any[] {
         if (direction === 'vertical') {
             return data.map((item, index) => ({
@@ -34,6 +45,13 @@ export class BarPlot extends BasePlot {
             }));
         }
     }
+
+    /**
+     * Obtiene todos los valores únicos del atributo hue como strings.
+     * @param RenamedData - Datos normalizados.
+     * @param hue_value - Nombre del atributo usado para color.
+     * @returns Lista de categorías únicas para el color.
+     */
     private get_all_hues(RenamedData: any[], hue_value: string): string[] {
         return RenamedData.reduce((all, row) => {
             const hueValueAsString = String(row[hue_value]);
@@ -43,6 +61,11 @@ export class BarPlot extends BasePlot {
             return all;
         }, [] as string[]);
     }
+
+    /**
+     * Renderiza el gráfico de barras y configura herramientas de selección.
+     * @param params - Datos, mapeos, orientación, dimensiones y callbacks.
+     */
     plot(params: BarPlotParams): void {
         const { data, xValue, yValue, hue, setSelectedValues, direction, height, noAxes, noSideBar } = params;
         let width = params.width;
@@ -93,6 +116,10 @@ export class BarPlot extends BasePlot {
             createSingleBars(this);
         }
 
+        /**
+         * Crea barras agregando por categoría y configura escalas/axes.
+         * @param plot - Instancia del gráfico.
+         */
         function createSingleBars(plot: BarPlot){
             // Agrega por categoría: suma y cuenta
             const agg: Record<string, AggregatedValues & { rows: any[] }> = {};
@@ -141,6 +168,10 @@ export class BarPlot extends BasePlot {
             const scaleConfig: ScaleConfig = createScaleConfig();
 
             function createScaleConfig(): ScaleConfig {
+                /**
+                 * Genera escalas band/linear según la orientación y datos.
+                 * @returns Configuración completa de escalas, ejes y dimensiones.
+                 */
                 if (width === null || height === null){
                     throw new Error("Width and Height must be defined");
                 }
@@ -206,6 +237,7 @@ export class BarPlot extends BasePlot {
             })
             .on("click", mouseClick);
 
+            // Configura herramientas y barra lateral si está habilitada.
             if (!noSideBar) {
                 clickSelectButton = new ClickSelectButton(true);
                 deselectAllButton = new DeselectAllButton(bars, callUpdateSelected);
@@ -233,8 +265,14 @@ export class BarPlot extends BasePlot {
     }
 }
 
-
+/**
+ * Modelo para BarPlot.
+ * Define propiedades reactivas: datos, mapeos, orientación y valores seleccionados.
+ */
 export class BarPlotModel extends BaseModel {
+  /**
+   * Valores por defecto del modelo.
+   */
   defaults() {
     return {
         ...super.defaults(),
@@ -251,11 +289,22 @@ export class BarPlotModel extends BaseModel {
     };
   }
 
+  /**
+   * Nombre de la clase de modelo y vista.
+   */
   static readonly model_name = "BarPlotModel";
   static readonly view_name = "BarPlotView";
 }
 
+/**
+ * Vista para BarPlot.
+ * Construye parámetros, renderiza y sincroniza selección con el modelo.
+ */
 export class BarPlotView extends BaseView<BarPlot> {
+    /**
+     * Obtiene los parámetros desde el modelo y el layout calculado.
+     * @returns Parámetros de renderizado para el gráfico de barras.
+     */
     params(): BarPlotParams {
 
         return {
@@ -272,6 +321,10 @@ export class BarPlotView extends BaseView<BarPlot> {
         };
     }
 
+    /**
+     * Inicializa el widget, conecta listeners de cambios y renderiza.
+     * @param element - Elemento contenedor del widget.
+     */
     plot(element: HTMLElement) {
         this.widget = new BarPlot(element);
 
@@ -285,6 +338,10 @@ export class BarPlotView extends BaseView<BarPlot> {
         this.widget.plot(this.params());
     }
 
+    /**
+     * Actualiza en el modelo los valores seleccionados y persiste cambios.
+     * @param values - Filas seleccionadas del gráfico.
+     */
     setSelectedValues(values: any[]) {
         this.model.set({ selectedValuesRecords: values });
         this.model.save_changes();

@@ -2,10 +2,19 @@ import { BaseWidget } from "../base/base_widget";
 import { CheckboxParams } from "./interface";
 import {BaseModel, BaseView} from '../base/base';
 
+/**
+ * Widget de checkbox básico.
+ * Maneja descripción, estado checked y sincronización con el modelo.
+ */
 export class Checkbox extends BaseWidget {
     private checkbox: HTMLInputElement;
     private label: HTMLLabelElement | null = null;
 
+    /**
+     * Actualiza el texto de la etiqueta asociada al checkbox.
+     * Crea la etiqueta si aún no existe.
+     * @param description - Texto visible de la etiqueta.
+     */
     onDescriptionChanged(description: string) {
         if (!this.label) {
             this.label = document.createElement("label");
@@ -14,6 +23,10 @@ export class Checkbox extends BaseWidget {
         this.label.textContent = description;
     }
 
+    /**
+     * Renderiza el checkbox y conecta el manejador de cambio.
+     * @param params - Descripción y callback para actualizar el estado checked.
+     */
     plot(params: CheckboxParams) {
         const { description, setChecked } = params;
 
@@ -36,7 +49,14 @@ export class Checkbox extends BaseWidget {
     }
 }
 
+/**
+ * Modelo del checkbox.
+ * Define propiedades reactivas para descripción y estado checked.
+ */
 export class CheckboxModel extends BaseModel {
+  /**
+   * Valores por defecto del modelo.
+   */
   defaults() {
     return {
       ...super.defaults(),
@@ -49,23 +69,40 @@ export class CheckboxModel extends BaseModel {
     };
   }
 
+  /**
+   * Nombre de la clase de modelo y vista.
+   */
   public static readonly model_name = "CheckboxModel";
   public static readonly view_name = "CheckboxView";
 }
 
-
+/**
+ * Vista del checkbox.
+ * Sincroniza cambios entre el modelo y el widget.
+ */
 export class CheckboxView extends BaseView<Checkbox> {
+  /**
+   * Actualiza la descripción del checkbox en el widget.
+   */
   setDescription(): void {
     const description = this.model.get("description");
     this.widget.onDescriptionChanged(description);
   }
 
+  /**
+   * Actualiza el estado checked en el modelo y persiste cambios.
+   * @param change - Objeto con la propiedad checked.
+   */
   setChecked(change: { checked: boolean }): void {
     const checked = change.checked;
     this.model.set({ checked: checked });
     this.model.save_changes();
   }
 
+  /**
+   * Construye los parámetros para renderizar el checkbox.
+   * @returns Parámetros actuales de descripción y callback de cambio.
+   */
   params(): CheckboxParams {
     return { 
             description: this.model.get("description"), 
@@ -73,6 +110,10 @@ export class CheckboxView extends BaseView<Checkbox> {
           };
   }
 
+  /**
+   * Inicializa el widget y conecta listeners del modelo.
+   * @param element - Elemento contenedor del widget.
+   */
   plot(element: HTMLElement): void {
     this.widget = new Checkbox(element);
 

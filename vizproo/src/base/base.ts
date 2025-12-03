@@ -5,12 +5,27 @@ import "../../css/widget.css";
 import packageData from "../../package.json";
 
 export const WIDGET_HEIGHT = 500;
+/**
+ * Márgenes por defecto del widget.
+ */
 export const WIDGET_MARGIN = { top: 20, right: 20, bottom: 30, left: 20 };
+/**
+ * Tiempo máximo de espera (ms) para el renderizado inicial.
+ */
 export const RENDER_TIMEOUT = 20000;
+/**
+ * Intervalo (ms) de reintento durante el renderizado inicial.
+ */
 export const RENDER_INTERVAL = 100;
 
-
+/**
+ * Modelo base para widgets Jupyter.
+ * Configura los metadatos del módulo y versiones a partir de package.json.
+ */
 export abstract class BaseModel extends DOMWidgetModel {
+  /**
+   * Valores por defecto del modelo, incluyendo metadatos de módulo y versión.
+   */
   defaults() {
     return {
       ...super.defaults(),
@@ -21,20 +36,69 @@ export abstract class BaseModel extends DOMWidgetModel {
     };
   }
 
+  /**
+   * Nombre del paquete donde reside el modelo.
+   */
   public static readonly model_module = packageData.name;
+  /**
+   * Versión del paquete para el modelo.
+   */
   public static readonly model_module_version = packageData.version;
+  /**
+   * Nombre del paquete donde reside la vista.
+   */
   public static readonly view_module = packageData.name;
+  /**
+   * Versión del paquete para la vista.
+   */
   public static readonly view_module_version = packageData.version;
 }
 
+/**
+ * Vista base para widgets Jupyter.
+ * Maneja obtención del elemento, cálculo de tamaños y ciclo de renderizado.
+ */
 export abstract class BaseView<T extends BaseWidget = BaseWidget> extends DOMWidgetView {
+  /**
+   * Elemento raíz donde se renderiza el widget.
+   */
   element: HTMLElement | null = null;
+  /**
+   * Ancho calculado del contenedor del widget.
+   */
   width: number | null = null;
+  /**
+   * Alto calculado del contenedor del widget.
+   */
   height: number | null = null;
+  /**
+   * ID opcional del elemento DOM donde se montará el widget.
+   */
   elementId: string | null = null;
+  /**
+   * Instancia del widget que realiza el renderizado.
+   */
   widget!: T;
+
+  /**
+   * Dibuja el widget dentro del elemento suministrado.
+   * Debe ser implementado por subclases.
+   * @param element - Elemento contenedor del widget.
+   */
   abstract plot(element: HTMLElement): void;
+
+  /**
+   * Retorna los parámetros de renderizado del widget.
+   * Debe ser implementado por subclases.
+   */
   abstract params(): BaseWidgetParams;
+
+  /**
+   * Inicia el proceso de renderizado con reintentos hasta que
+   * existan dimensiones válidas o se alcance el tiempo máximo.
+   * @remarks
+   * Reintenta cada RENDER_INTERVAL ms y aborta si supera RENDER_TIMEOUT.
+   */
   render() {
     let elapsedTime = 0;
 
@@ -62,11 +126,20 @@ export abstract class BaseView<T extends BaseWidget = BaseWidget> extends DOMWid
     }, RENDER_INTERVAL);
   }
 
+  /**
+   * Recalcula tamaños y solicita al widget que vuelva a renderizar
+   * usando su mecanismo de "debounce".
+   */
   replot(): void {
     this.setSizes();
     this.widget.replot(this.params());
   }
 
+  /**
+   * Obtiene el elemento DOM donde se renderiza el widget.
+   * Si existe `elementId` en el modelo, lo usa para buscar el elemento.
+   * @returns El elemento DOM o null si no existe.
+   */
   getElement(): HTMLElement | null {
     this.elementId = this.model.get("elementId");
 
@@ -78,6 +151,12 @@ export abstract class BaseView<T extends BaseWidget = BaseWidget> extends DOMWid
     return element;
   }
 
+  /**
+   * Calcula y establece las dimensiones actuales del contenedor del widget.
+   * @remarks
+   * Usa `clientWidth` y `clientHeight` del elemento; si no están disponibles,
+   * las dimensiones se establecen en null para evitar renderizados inválidos.
+   */
   setSizes(): void {
     const elementId: string = this.model.get("elementId");
 

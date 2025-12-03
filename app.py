@@ -77,7 +77,7 @@ with st.sidebar:
     # Menú de navegación
     page = st.radio(
         "Navegación",
-        ["🏠 Home", "📥 Instalación", "🧪 Uso Básico", "🧩 Custom Charts", "🧪 Desarrollo", "📊 Dashboards"],
+        ["🏠 Home", "📥 Instalación", "🧪 Uso Básico", "🧩 Custom Charts", "🧪 Desarrollo", "📊 Dashboards", "📈 Ejemplos"],
         label_visibility="collapsed"
     )
 
@@ -644,6 +644,84 @@ dashboard.show()""", language="python")
         💡 <strong>Tip:</strong> Los dashboards se pueden exportar a HTML estático para compartir sin necesidad de Python.
     </div>
     """, unsafe_allow_html=True)
+
+elif page == "📈 Ejemplos":
+    st.markdown("# 📈 Ejemplos")
+    st.markdown("Colección de ejemplos estilo Matplotlib para explorar lo que puedes hacer con VizProo.")
+
+    # Tabs para los plots
+    tab_barplot, tab_scatter = st.tabs(["BarPlot", "ScatterPlot"])
+
+    with tab_barplot:
+        st.markdown("## BarPlot")
+        st.markdown("""
+        Este ejemplo utiliza el dataset Iris de Seaborn para mostrar un gráfico de barras
+        donde el eje X corresponde a una categoría y el eje Y a un valor agregado.
+        """)
+
+        # Imagen de resultado (reemplaza la ruta con la correcta en tu entorno)
+        st.image("../vizproo/docs/images/barplot.png", caption="Ejemplo de BarPlot con Iris", width=True)
+
+        st.markdown("### Código de ejemplo")
+        st.code("""
+from vizproo import BarPlot
+import seaborn as sns
+
+# Cargar dataset de ejemplo (Iris)
+iris = sns.load_dataset('iris')
+
+# Crear gráfico de barras
+barplot = BarPlot(data=iris, x='sepal_width', y='sepal_length')
+
+# Mostrar el gráfico en el notebook
+barplot
+""", language="python")
+
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Notas</h4>
+            <ul>
+                <li>Asegúrate de tener instalado <code>seaborn</code> para cargar el dataset Iris.</li>
+                <li>Puedes cambiar las columnas para adaptar el ejemplo a tus datos.</li>
+                <li>La selección de barras se sincroniza con Python si registras un callback.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with tab_scatter:
+        st.markdown("## ScatterPlot")
+        st.markdown("""
+        Este ejemplo utiliza el dataset Iris de Seaborn para mostrar un gráfico de dispersión
+        donde el eje X e Y corresponden a columnas numéricas, y 'hue' colorea por especie.
+        """)
+        # Imagen de resultado (ajusta la ruta según tu entorno)
+        st.image("../vizproo/docs/images/scatterplot.png", caption="Ejemplo de ScatterPlot con Iris", width=True)
+
+        st.markdown("### Código de ejemplo")
+        st.code("""
+from vizproo import ScatterPlot
+import seaborn as sns
+
+# Cargar dataset de ejemplo (Iris)
+iris = sns.load_dataset('iris')
+
+# Crear gráfico de dispersión
+scatterplot = ScatterPlot(data=iris, x='sepal_width', y='sepal_length', hue='species')
+
+# Mostrar el gráfico en el notebook
+scatterplot
+""", language="python")
+
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Notas</h4>
+            <ul>
+                <li>Asegúrate de tener instalado <code>seaborn</code> para cargar el dataset Iris.</li>
+                <li>Puedes ajustar <code>pointSize</code> y <code>opacity</code> para mejorar la visualización.</li>
+                <li>La selección de puntos se sincroniza con Python si registras un callback.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")

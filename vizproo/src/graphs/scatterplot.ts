@@ -9,7 +9,6 @@ import {
     SideBar
 } from "./tools/tools";
  
-
 import { 
         ScatterPlotParams,
         ProcessedScatterData
@@ -17,8 +16,15 @@ import {
 
 const DEFAULT_COLOR = "#4299e1";
 
+/**
+ * Gráfico de dispersión (scatter plot) interactivo.
+ * Soporta color por categoría, tamaño por variable, selección por clic/caja y barra lateral.
+ */
 export class ScatterPlot extends BasePlot {
-    
+    /**
+     * Renderiza el gráfico de dispersión y conecta herramientas de selección.
+     * @param params - Datos, mapeos (x,y,hue,size), dimensiones, opacidad y callbacks.
+     */
     plot(params: ScatterPlotParams): void {
         const { data, x, y, size, height, hue,setSelectedValues, noSideBar } = params;
         let {width, opacity, pointSize} = params;
@@ -38,6 +44,9 @@ export class ScatterPlot extends BasePlot {
         this.init(width, height);
 
         const GG = this.gGrid;
+        /**
+         * Notifica al modelo los puntos seleccionados, filtrando metadatos internos.
+         */
         function callUpdateSelected() {
             if (setSelectedValues) {
                 const selectedData = GG.selectAll(".scatter_dot.selected").data();
@@ -188,7 +197,14 @@ export class ScatterPlot extends BasePlot {
     }
 }
 
+/**
+ * Modelo para ScatterPlot.
+ * Define propiedades reactivas: datos, mapeos, tamaño, opacidad y selección.
+ */
 export class ScatterPlotModel extends BaseModel {
+    /**
+     * Valores por defecto del modelo.
+     */
     defaults() {
         return {
             ...super.defaults(),
@@ -207,11 +223,22 @@ export class ScatterPlotModel extends BaseModel {
         };
     }
 
+    /**
+     * Nombre de la clase de modelo y vista.
+     */
     static readonly model_name = "ScatterPlotModel";
     static readonly view_name = "ScatterPlotView";
 }
 
+/**
+ * Vista para ScatterPlot.
+ * Construye parámetros, renderiza y sincroniza selección con el modelo.
+ */
 export class ScatterPlotView extends BaseView<ScatterPlot> {
+    /**
+     * Obtiene los parámetros desde el modelo y el layout calculado.
+     * @returns Parámetros de renderizado para el scatter plot.
+     */
     params(): ScatterPlotParams {
         return {
             data: this.model.get("dataRecords"),
@@ -228,6 +255,10 @@ export class ScatterPlotView extends BaseView<ScatterPlot> {
         };
     }
 
+    /**
+     * Inicializa el widget, conecta listeners de cambios y renderiza.
+     * @param element - Elemento contenedor del widget.
+     */
     plot(element: HTMLElement) {
         this.widget = new ScatterPlot(element);
 
@@ -242,6 +273,11 @@ export class ScatterPlotView extends BaseView<ScatterPlot> {
 
         this.widget.plot(this.params());
     }
+
+    /**
+     * Actualiza en el modelo los valores seleccionados y persiste cambios.
+     * @param values - Filas seleccionadas del gráfico.
+     */
     setSelectedValues(values: any[]) {
         this.model.set({ selectedValuesRecords: values });
         this.model.save_changes();
